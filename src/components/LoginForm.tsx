@@ -1,6 +1,10 @@
 import type { FormProps } from "antd";
 import { Button, Form, Input } from "antd";
 import { useLoginMutation } from "../store/api/authApi";
+import { useNavigate } from "react-router";
+import { PATHS } from "../navigation/paths";
+import Cookies from "js-cookie";
+import type { LoginResponse } from "../types/login";
 
 type FieldType = {
   login: string;
@@ -9,9 +13,17 @@ type FieldType = {
 
 const LoginForm = () => {
   const [login] = useLoginMutation();
+  const navigate = useNavigate();
 
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    login(values);
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    try {
+      const result = await login(values).unwrap();
+      Cookies.set("token", result.result.token);
+      navigate(PATHS.home);
+    } catch (error: any) {
+      const errorMessage = error.data as LoginResponse;
+      alert(errorMessage.error?.message);
+    }
   };
 
   return (
