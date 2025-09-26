@@ -42,3 +42,12 @@ li {
   display: grid;
   place-items: center;
 }
+
+.inputWidth {
+  width: 200px;
+}
+
+.filtersWrapper {
+  display: flex;
+  gap: 20px;
+}
