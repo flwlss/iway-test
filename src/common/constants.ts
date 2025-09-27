@@ -73,3 +73,20 @@ export const statusOptions = [
     label: 4,
   },
 ];
+
+export const drawerInfoConfig = [
+  { key: "doer_city_id", label: "ID города-исполнителя" },
+  { key: "transaction", label: "Транзакция" },
+  { key: "cancellation_time", label: "Время бесплатной отмены" },
+  { key: "booker_number", label: "Номер брони" },
+  { key: "arrival_number", label: "Номер рейса прилета или поезда прибытия" },
+  {
+    key: "departure_number",
+    label: "Номер рейса вылета или поезда отправления",
+  },
+  { key: "table", label: "Надпись на табличке" },
+  { key: "notes", label: "Примечание для водителя" },
+  { key: "location_address", label: "Адрес местоположения" },
+  { key: "lang", label: "Язык" },
+  { key: "passengers_number", label: "Количество пассажиров" },
+];
