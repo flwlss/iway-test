@@ -1,17 +1,19 @@
 import { useGetTripsQuery } from "../store/api/tripApi";
 import { useCallback, useMemo, useState } from "react";
-import dayjs from "dayjs";
 import { Table, type TablePaginationConfig } from "antd";
 import type { AppliedFilters } from "../pages/HomePage";
 import { columns } from "../common/constants";
 import type { Order } from "../types/trip";
+import MobileTrips from "./MobileTrips";
+import { transformTripData } from "../common/utils";
 
 interface ITripsTable {
   appliedFilters: AppliedFilters;
   onRowClick: (order: Order) => void;
+  isMobile: boolean;
 }
 
-const TripsTable = ({ appliedFilters, onRowClick }: ITripsTable) => {
+const TripsTable = ({ appliedFilters, onRowClick, isMobile }: ITripsTable) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: trips, isFetching } = useGetTripsQuery({
     page: currentPage,
@@ -21,28 +23,28 @@ const TripsTable = ({ appliedFilters, onRowClick }: ITripsTable) => {
   });
 
   const dataSource = useMemo(() => {
-    return (
-      trips?.result.orders?.map((trip) => ({
-        key: trip.order_id,
-        name: trip.passengers[0].name ?? "-",
-        email: trip.passengers[0].email ?? "-",
-        phone: trip.passengers[0].phone ?? "-",
-        ...trip,
-        date: trip.date ? dayjs(trip.date).format("DD.MM.YYYY HH:mm") : "-",
-        date_departure: trip.date_departure
-          ? dayjs(trip.date_departure).format("DD.MM.YYYY HH:mm")
-          : "-",
-        date_arrival: trip.date_arrival
-          ? dayjs(trip.date_arrival).format("DD.MM.YYYY HH:mm")
-          : "-",
-        destination_address: trip.destination_address ?? "-",
-      })) || []
-    );
+    return trips?.result.orders?.map(transformTripData) || [];
   }, [trips?.result.orders]);
 
-  const handlePageChange = useCallback((pagination: TablePaginationConfig) => {
-    setCurrentPage(pagination.current || 1);
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
   }, []);
+
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
+    handlePageChange(pagination.current || 1);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <MobileTrips
+        dataSource={dataSource}
+        pagination={trips?.result.page_data}
+        onCardClick={onRowClick}
+        onPageChange={handlePageChange}
+        isFetching={isFetching}
+      />
+    );
+  }
 
   return (
     <Table
@@ -58,15 +60,15 @@ const TripsTable = ({ appliedFilters, onRowClick }: ITripsTable) => {
         };
       }}
       locale={{ emptyText: "Нет данных" }}
-      onChange={handlePageChange}
+      onChange={handleTableChange}
       pagination={{
-        current: currentPage,
+        current: trips?.result.page_data.page,
         pageSize: trips?.result.page_data.items_on_page,
         total: trips?.result.page_data.total_items,
         showSizeChanger: false,
       }}
       tableLayout="fixed"
-      scroll={{ x: 1280 }}
+      scroll={{ x: 1600 }}
     />
   );
 };

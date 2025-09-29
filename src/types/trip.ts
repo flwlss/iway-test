@@ -2,16 +2,18 @@ export type Trip = {
   error: null;
   result: {
     orders: Order[];
-    page_data: {
-      page: number;
-      items_on_page: number;
-      total_items: number;
-      page_count: number;
-    };
+    page_data: PageData;
   };
 
   uuid: string;
 };
+
+export interface PageData {
+  page: number;
+  items_on_page: number;
+  total_items: number;
+  page_count: number;
+}
 
 export interface Order {
   date_change: string;

@@ -5,20 +5,19 @@ import type { AppliedFilters } from "../pages/HomePage";
 
 interface IFiltersToolbar {
   onFiltersChange: (value: AppliedFilters) => void;
+  isMobile: boolean;
 }
 
-const FiltersToolbar = ({ onFiltersChange }: IFiltersToolbar) => {
+const FiltersToolbar = ({ onFiltersChange, isMobile }: IFiltersToolbar) => {
   const [searchName, setSearchName] = useState<string>("");
   const [searchPhone, setSearchPhone] = useState<string>("");
   const [searchStatus, setSearchStatus] = useState<number[] | null>(null);
 
-  const handleInputChange = useCallback(
+  const handleInputChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        setter(e.target.value);
-      },
-    []
-  );
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
 
   const handleStatusChange = useCallback((value: number[]) => {
     setSearchStatus(value.length > 0 ? value : null);
@@ -33,23 +32,21 @@ const FiltersToolbar = ({ onFiltersChange }: IFiltersToolbar) => {
   }, [searchName, searchPhone, searchStatus]);
 
   return (
-    <div className="filtersWrapper">
+    <div className={isMobile ? "mobileFiltersWrapper" : "filtersWrapper"}>
       <Input
         value={searchName}
         onChange={handleInputChange(setSearchName)}
-        className="inputWidth"
         placeholder="Введите имя"
       />
       <Input
         value={searchPhone}
         onChange={handleInputChange(setSearchPhone)}
-        className="inputWidth"
         placeholder="Введите телефон"
       />
       <Select
         mode="multiple"
         options={statusOptions}
-        className="inputWidth"
+        className={isMobile ? "" : "filtersWrapper__select"}
         onChange={handleStatusChange}
         placeholder="Статус"
       />

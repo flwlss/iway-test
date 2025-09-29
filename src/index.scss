@@ -37,19 +37,38 @@ li {
   text-decoration: none;
 }
 
+body {
+  min-width: 320px;
+}
+
 .loginPageWrapper {
   min-height: 100vh;
   display: grid;
   place-items: center;
 }
 
-.inputWidth {
-  width: 200px;
-}
-
 .filtersWrapper {
   display: flex;
   gap: 20px;
+
+  &__select {
+    width: 200px;
+  }
+
+  input {
+    width: 200px;
+  }
+}
+
+.mobileFiltersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  input {
+    width: 100%;
+  }
+
 }
 
 .tableRow {

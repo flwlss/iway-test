@@ -6,13 +6,15 @@ interface IInfoDrawer {
   order: Order | null;
   open: boolean;
   onClose: () => void;
+  isMobile: boolean;
 }
 
-const InfoDrawer = ({ order, open, onClose }: IInfoDrawer) => {
+const InfoDrawer = ({ order, open, onClose, isMobile }: IInfoDrawer) => {
   return (
     <Drawer
-      width={600}
-      placement="right"
+      width={isMobile ? "100%" : 600}
+      placement={isMobile ? "bottom" : "right"}
+      height={isMobile ? "85%" : "100%"}
       open={open}
       onClose={onClose}
       title={order?.passengers[0].name}
